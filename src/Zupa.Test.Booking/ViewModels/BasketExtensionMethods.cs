@@ -21,7 +21,8 @@ namespace Zupa.Test.Booking.ViewModels
         {
             return new Basket
             {
-                Items = basket.Items.ToBasketItemViewModels()
+                Items = basket.Items.ToBasketItemViewModels(),
+                Total = basket.Items.Sum(item => item.GrossPrice)
             };
         }
     }
