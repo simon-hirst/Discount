@@ -55,8 +55,7 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
-function updateBasketView(basket)
-{
+function updateBasketView(basket) {
     let basketList = document.getElementById('currentBasket');
     
     let totalLi = document.createElement('li');
