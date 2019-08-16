@@ -6,10 +6,15 @@
         {
             return new Discount
             {
-                ID = discount.ID,
-                Name = discount.Name,
-                DiscountRate = discount.DiscountRate,
-                Used = discount.Used
+                ID = discount.ID
+            };
+        }
+
+        public static Models.Discount ToDiscountOrderModel(this Discount discount)
+        {
+            return new Models.Discount
+            {
+                ID = discount.ID
             };
         }
     }

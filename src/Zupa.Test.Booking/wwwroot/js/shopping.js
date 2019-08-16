@@ -130,3 +130,20 @@ function placeOrder() {
             });
         });
 }
+
+function applyDiscount() {
+    let discountText = document.getElementById('promoText').value;
+    console.log(discountText);
+
+    fetch('api/discounts', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: discountText
+    }).then(function (response) {
+        console.log("hello");
+        console.log(response);
+    });
+}
