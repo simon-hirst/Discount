@@ -19,5 +19,20 @@ namespace Zupa.Test.Booking.Controllers
         {
             _discountsRepository = discountsRepository;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Discount>> ApplyDiscount([FromBody] Discount discount)
+        {
+            
+
+            return discount;
+        }
+
+        [HttpGet("{discountText}")]
+        public async Task<ActionResult<Discount>> GetDiscount(string discountText)
+        {
+            var discountResult = await _discountsRepository.ReadAsync(discountText);
+            return discountResult == null ? null : discountResult.ToDiscountViewModel();
+        }
     }
 }

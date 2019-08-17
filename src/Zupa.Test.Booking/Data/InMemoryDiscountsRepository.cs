@@ -13,8 +13,8 @@ namespace Zupa.Test.Booking.Data
         public InMemoryDiscountsRepository()
         {
             _discounts = new List<Discount> {
-                new Discount { ID = new Guid("7AA533AA-560C-418B-8C2C-EEC8FCDB35EE"), DiscountRate = 0.10, Name = "discount10", Used = false },
-                new Discount { ID = new Guid("D86F8A0C-2B6F-41A6-B124-3D2EAE60746D"), DiscountRate = 0.50, Name = "discount50", Used = false },
+                new Discount { DiscountRate = 0.10, Name = "discount10", Used = false },
+                new Discount { DiscountRate = 0.50, Name = "discount50", Used = false },
             };
         }
 
@@ -23,19 +23,19 @@ namespace Zupa.Test.Booking.Data
             return Task.FromResult(_discounts.ToArray());
         }
 
-        public Task<Discount> ReadAsync(Guid id)
+        public Task<Discount> ReadAsync(string name)
         {
-            return Task.FromResult(_discounts.First(discount => discount.ID == id));
+            return Task.FromResult(_discounts.FirstOrDefault(discount => discount.Name == name));
         }
 
-        public Task SetUsedAsync(Guid id)
+        public Task SetUsedAsync(string name)
         {
-            return Task.FromResult(_discounts.First(discount => discount.ID == id).Used = true);
+            return Task.FromResult(_discounts.First(discount => discount.Name == name).Used = true);
         }
 
-        public Task<bool> HasBeenUsedAsync(Guid id)
+        public Task<bool> HasBeenUsedAsync(string name)
         {
-            return Task.FromResult(_discounts.First(discount => discount.ID == id).Used);
+            return Task.FromResult(_discounts.First(discount => discount.Name == name).Used);
         }
     }
 }

@@ -41,6 +41,11 @@
             updateBasketView(basket);
             resetBasketCount(basket.items.length);
         });
+
+    // stop discount button from refreshing page
+    document.getElementById("discountBtn").addEventListener("click", function (event) {
+        event.preventDefault()
+    });
 });
 
 function emptyBasketView() {
@@ -131,19 +136,40 @@ function placeOrder() {
         });
 }
 
-function applyDiscount() {
-    let discountText = document.getElementById('promoText').value;
-    console.log(discountText);
+function verifyDiscount() {
+    let discountText = document.getElementById('discountText').value;
 
-    fetch('api/discounts', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: discountText
-    }).then(function (response) {
-        console.log("hello");
-        console.log(response);
-    });
+    fetch('/api/discounts/' + discountText)
+        .then(function (response) {
+            if (response.status == 200) {
+                return response.json();
+            }
+            else {
+                alert('This discount code does not exist.');
+                return null;
+            }
+        }).then(function (discount) {
+            if (discount.used) {
+                alert('This discount code has already been used.');
+                return null;
+            }
+            applyDiscount(discount);
+        });
+}
+
+function applyDiscount(discount) {
+    if (discount) {
+        fetch('api/discounts', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(discount)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (discount) {
+            
+        });
+    }
 }

@@ -6,7 +6,9 @@
         {
             return new Discount
             {
-                ID = discount.ID
+                Name = discount.Name,
+                DiscountRate = discount.DiscountRate,
+                Used = discount.Used
             };
         }
 
@@ -14,7 +16,9 @@
         {
             return new Models.Discount
             {
-                ID = discount.ID
+                DiscountRate = discount.DiscountRate,
+                Name = discount.Name,
+                Used = discount.Used
             };
         }
     }

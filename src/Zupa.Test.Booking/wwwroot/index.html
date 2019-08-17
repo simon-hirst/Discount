@@ -20,11 +20,11 @@
                     
                 </ul>
 
-                <form class="card p-2" id="promoForm">
+                <form class="card p-2">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="promoText" placeholder="Promo code">
+                        <input type="text" class="form-control" id="discountText" placeholder="Promo code">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary" onclick="applyDiscount()">Redeem</button>
+                            <button type="submit" class="btn btn-secondary" id="discountBtn" onclick="verifyDiscount()">Redeem</button>
                         </div>
                     </div>
                 </form>
