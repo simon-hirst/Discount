@@ -56,10 +56,22 @@ document.forms['discountForm'].addEventListener('submit', (event) => {
         body: JSON.stringify(document.getElementById('discountText').value)
     }).then((resp) => {
         console.log(resp);
-        return resp.json();
-    }).then((body) => {
-        console.log(body);
-        alert(body.value);
+        if (resp.status != 200) {
+            resp.json().then((body) => { alert(body.value) })
+        }
+        else {
+            resp.json().then((body) => { alert("Applied discount " + body.name + ".") })
+
+            fetch('/api/baskets')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (basket) {
+                    emptyBasketView();
+                    resetBasketCount(basket.items.length);
+                    updateBasketView(basket);
+                });
+        }
     });
 });
 

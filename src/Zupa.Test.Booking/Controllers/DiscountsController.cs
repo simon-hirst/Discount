@@ -22,7 +22,6 @@ namespace Zupa.Test.Booking.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Discount>> ApplyDiscount([FromBody] string discountText)
@@ -30,20 +29,9 @@ namespace Zupa.Test.Booking.Controllers
             var discountResult = await _discountsRepository.ReadAsync(discountText);
             var basket = await _basketsRepository.ReadAsync();
 
-            if (discountResult == null)
-            {
-                return NotFound(new JsonResult("This discount doesn't exist."));
-            }
-
-            if (discountResult.Used)
-            {
-                return BadRequest(new JsonResult("This discount has been used already."));
-            }
-
-            if (basket.Discount != 1)
-            {
-                return NotFound(new JsonResult("A discount has already been applied."));
-            }
+            if (discountResult == null) { return NotFound(new JsonResult("Discount doesn't exist.")); }
+            if (discountResult.Used) { return BadRequest(new JsonResult("This discount has been used already.")); }
+            if (basket.Discount != 1){ return NotFound(new JsonResult("A discount has already been applied.")); }
 
             await _discountsRepository.SetUsedAsync(discountResult.Name); // todo: change to take Discount as parameter
             await _basketsRepository.SetDiscount(discountResult.DiscountRate);
