@@ -54,21 +54,42 @@ document.forms['discountForm'].addEventListener('submit', (event) => {
         },
         body: JSON.stringify(document.getElementById('discountText').value)
     }).then((resp) => {
-        if (resp.status != 200) { resp.json().then((body) => { alert(body.value) }) }
-        else {
-            resp.json().then((body) => { alert("Applied discount " + body.name + ".") }) 
-
-            fetch('/api/baskets')
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (basket) {
-                    emptyBasketView();
-                    updateBasketView(basket);
-                });
-        }
+        handleDiscountResponse(resp);
     });
 });
+
+function handleDiscountResponse(resp) {
+    if (resp.status != 200) {
+        resp.json().then((body) => { createAlert(body.value, "danger") });
+    }
+    else {
+        resp.json().then((body) => { createAlert("Applied discount " + body.name + ".", "success") })
+
+        fetch('/api/baskets')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (basket) {
+                emptyBasketView();
+                updateBasketView(basket);
+            });
+    }
+}
+
+function createAlert(text, type) {
+    let alertBox = document.getElementById('alertBox');
+    emptyAlertBox();
+    let div = document.createElement('div');
+    div.className = "alert alert-" + type + " text-center";
+    div.role = "alert";
+    div.innerHTML = text + '<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>';
+    alertBox.appendChild(div);
+}
+
+function emptyAlertBox() {
+    let alertBox = document.getElementById('alertBox');
+    alertBox.lastElementChild != null ? alertBox.removeChild(alertBox.lastElementChild) : null;
+}
 
 function emptyBasketView() {
     var basketView = document.getElementById('currentBasket');
@@ -154,6 +175,7 @@ function placeOrder() {
                 alert('your order has been placed');
                 resetBasketCount(0);
                 emptyBasketView();
+                emptyAlertBox();
             });
         });
 }

@@ -31,7 +31,7 @@ namespace Zupa.Test.Booking.Controllers
 
             // error handling
             if (discountModel == null) { return NotFound(new JsonResult("Discount doesn't exist.")); }
-            if (discountModel.Used) { return BadRequest(new JsonResult("This discount has been used already.")); }
+            if (discountModel.IsUsed) { return BadRequest(new JsonResult("This discount has been used already.")); }
             if (basketModel.DiscountApplied){ return BadRequest(new JsonResult("A discount has already been applied.")); }
 
             // set the discount and send to view for confirm

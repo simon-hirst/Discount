@@ -13,8 +13,8 @@ namespace Zupa.Test.Booking.Data
         public InMemoryDiscountsRepository()
         {
             _discounts = new List<Discount> {
-                new Discount { DiscountRate = 0.90, Name = "discount10", Used = false },
-                new Discount { DiscountRate = 0.50, Name = "discount50", Used = false },
+                new Discount { DiscountRate = 0.90, Name = "discount10", IsUsed = false },
+                new Discount { DiscountRate = 0.50, Name = "discount50", IsUsed = false },
             };
         }
 
@@ -25,7 +25,7 @@ namespace Zupa.Test.Booking.Data
 
         public Task SetUsedAsync(string name)
         {
-            return Task.FromResult(_discounts.First(discount => discount.Name == name).Used = true);
+            return Task.FromResult(_discounts.First(discount => discount.Name == name).IsUsed = true);
         }
     }
 }
