@@ -16,7 +16,10 @@ namespace Zupa.Test.Booking.Data
         // initialise the basket object
         public InMemoryBasketsRepository()
         {
-            _basket = new Basket();
+            _basket = new Basket
+            {
+                Discount = 1
+            };
         }
 
         // read the basket in memory
@@ -29,7 +32,10 @@ namespace Zupa.Test.Booking.Data
         // sets basket to an empty one
         public Task ResetBasketAsync()
         {
-            return Task.FromResult(_basket = new Basket());
+            return Task.FromResult(_basket = new Basket
+            {
+                Discount = 1
+            });
         }
 
 
@@ -39,6 +45,12 @@ namespace Zupa.Test.Booking.Data
             items.Add(item);
             _basket.Items = items;
 
+            return Task.FromResult(_basket);
+        }
+
+        public Task<Basket> SetDiscount(double discountRate)
+        {
+            _basket.Discount = discountRate;
             return Task.FromResult(_basket);
         }
     }

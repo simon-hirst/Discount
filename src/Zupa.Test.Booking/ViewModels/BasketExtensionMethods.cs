@@ -13,16 +13,20 @@ namespace Zupa.Test.Booking.ViewModels
                 GrossTotal = basket.Items.Sum(item => item.GrossPrice),
                 NetTotal = basket.Items.Sum(item => item.NetPrice),
                 TaxTotal = basket.Items.Sum(item => item.NetPrice * item.TaxRate),
-                Items = basket.Items.ToOrderItemModels()
+                Items = basket.Items.ToOrderItemModels(),
+                Discount = basket.Discount
             };
         }
 
         public static Basket ToBasketViewModel(this Models.Basket basket)
         {
+            var totalUnrounded = basket.Items.Sum(item => item.GrossPrice * basket.Discount);
+            var totalRounded = Math.Round(totalUnrounded, 2);
             return new Basket
             {
                 Items = basket.Items.ToBasketItemViewModels(),
-                Total = basket.Items.Sum(item => item.GrossPrice)
+                Total = totalRounded,
+                Discount = basket.Discount
             };
         }
     }

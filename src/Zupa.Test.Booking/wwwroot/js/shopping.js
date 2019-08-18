@@ -145,15 +145,24 @@ function verifyDiscount() {
                 return response.json();
             }
             else {
-                alert('This discount code does not exist.');
+                alert('This discount code does not exist.'); // todo: fix empty values
                 return null;
             }
         }).then(function (discount) {
-            if (discount.used) {
-                alert('This discount code has already been used.');
-                return null;
-            }
-            applyDiscount(discount);
+            fetch('api/baskets')
+                .then(function (response) {
+                    return response.json();
+                }).then(function (basket) {
+                    if (discount) {
+                        if (discount.used == false & basket.discount == 1) {
+                            console.log("asdas");
+                            applyDiscount(discount);
+                        }
+                        else {
+                            alert('Discount already applied');
+                        }
+                    }
+                })
         });
 }
 
@@ -169,7 +178,15 @@ function applyDiscount(discount) {
         }).then(function (response) {
             return response.json();
         }).then(function (discount) {
-            
+            alert("Discount " + discount.name + " with a discount rate of " + discount.discountRate + " applied.");
+        }).then(function () {
+            fetch('/api/baskets')
+                .then(function (response) {
+                    return response.json();
+                }).then(function (basket) {
+                    emptyBasketView();
+                    updateBasketView(basket);
+                });
         });
     }
 }

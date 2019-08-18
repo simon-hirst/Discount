@@ -10,5 +10,6 @@ namespace Zupa.Test.Booking.Data
         Task<Discount> ReadAsync(string name);
         Task SetUsedAsync(string name);
         Task<bool> HasBeenUsedAsync(string name);
+        Task<bool> HasAnyBeenUsedAsync();
     }
 }
