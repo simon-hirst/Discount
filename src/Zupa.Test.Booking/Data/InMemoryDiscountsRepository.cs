@@ -18,11 +18,6 @@ namespace Zupa.Test.Booking.Data
             };
         }
 
-        public Task<Discount[]> ReadAllAsync()
-        {
-            return Task.FromResult(_discounts.ToArray());
-        }
-
         public Task<Discount> ReadAsync(string name)
         {
             return Task.FromResult(_discounts.FirstOrDefault(discount => discount.Name == name));
@@ -31,16 +26,6 @@ namespace Zupa.Test.Booking.Data
         public Task SetUsedAsync(string name)
         {
             return Task.FromResult(_discounts.First(discount => discount.Name == name).Used = true);
-        }
-
-        public Task<bool> HasBeenUsedAsync(string name)
-        {
-            return Task.FromResult(_discounts.First(discount => discount.Name == name).Used);
-        }
-
-        public Task<bool> HasAnyBeenUsedAsync()
-        {
-            return Task.FromResult(_discounts.FirstOrDefault(discount => discount.Used == true) != null);
         }
     }
 }

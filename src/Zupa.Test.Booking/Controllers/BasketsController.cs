@@ -10,17 +10,14 @@ namespace Zupa.Test.Booking.Controllers
     [ApiController]
     public class BasketsController : ControllerBase
     {
-        // allocate memory for the interface, readonly*, to talk to the Baskets object (InMemoryBasketsRepository)
         private readonly IBasketsRepository _basketsRepository;
 
-        // initialises the interface
         public BasketsController(IBasketsRepository basketsRepository)
         {
             _basketsRepository = basketsRepository;
         }
 
         [HttpPut]
-        // defines possible responses?
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Basket>> AddToBasket([FromBody]BasketItem basketItem)

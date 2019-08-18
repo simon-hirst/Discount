@@ -44,7 +44,6 @@
 });
 
 document.forms['discountForm'].addEventListener('submit', (event) => {
-    // stop the discount form from refreshing on submit so we can execute some JS
     event.preventDefault();
 
     fetch('/api/discounts', {
@@ -55,12 +54,9 @@ document.forms['discountForm'].addEventListener('submit', (event) => {
         },
         body: JSON.stringify(document.getElementById('discountText').value)
     }).then((resp) => {
-        console.log(resp);
-        if (resp.status != 200) {
-            resp.json().then((body) => { alert(body.value) })
-        }
+        if (resp.status != 200) { resp.json().then((body) => { alert(body.value) }) }
         else {
-            resp.json().then((body) => { alert("Applied discount " + body.name + ".") })
+            resp.json().then((body) => { alert("Applied discount " + body.name + ".") }) 
 
             fetch('/api/baskets')
                 .then(function (response) {
@@ -68,7 +64,6 @@ document.forms['discountForm'].addEventListener('submit', (event) => {
                 })
                 .then(function (basket) {
                     emptyBasketView();
-                    resetBasketCount(basket.items.length);
                     updateBasketView(basket);
                 });
         }

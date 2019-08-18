@@ -26,7 +26,8 @@ namespace Zupa.Test.Booking.ViewModels
             {
                 Items = basket.Items.ToBasketItemViewModels(),
                 Total = totalRounded,
-                Discount = basket.Discount
+                Discount = basket.Discount,
+                DiscountApplied = basket.DiscountApplied
             };
         }
     }

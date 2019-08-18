@@ -26,18 +26,20 @@ namespace Zupa.Test.Booking.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Discount>> ApplyDiscount([FromBody] string discountText)
         {
-            var discountResult = await _discountsRepository.ReadAsync(discountText);
-            var basket = await _basketsRepository.ReadAsync();
+            var discountModel = await _discountsRepository.ReadAsync(discountText);
+            var basketModel = await _basketsRepository.ReadAsync();
 
-            if (discountResult == null) { return NotFound(new JsonResult("Discount doesn't exist.")); }
-            if (discountResult.Used) { return BadRequest(new JsonResult("This discount has been used already.")); }
-            if (basket.Discount != 1){ return NotFound(new JsonResult("A discount has already been applied.")); }
+            // error handling
+            if (discountModel == null) { return NotFound(new JsonResult("Discount doesn't exist.")); }
+            if (discountModel.Used) { return BadRequest(new JsonResult("This discount has been used already.")); }
+            if (basketModel.DiscountApplied){ return BadRequest(new JsonResult("A discount has already been applied.")); }
 
-            await _discountsRepository.SetUsedAsync(discountResult.Name); // todo: change to take Discount as parameter
-            await _basketsRepository.SetDiscount(discountResult.DiscountRate);
-            discountResult = await _discountsRepository.ReadAsync(discountResult.Name);
+            // set the discount and send to view for confirm
+            await _discountsRepository.SetUsedAsync(discountModel.Name);
+            await _basketsRepository.SetDiscount(discountModel.DiscountRate);
+            discountModel = await _discountsRepository.ReadAsync(discountModel.Name);
 
-            return discountResult.ToDiscountViewModel();
+            return discountModel.ToDiscountViewModel();
         }
     }
 }

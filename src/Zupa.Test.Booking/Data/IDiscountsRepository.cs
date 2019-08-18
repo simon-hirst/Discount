@@ -6,10 +6,7 @@ namespace Zupa.Test.Booking.Data
 {
     public interface IDiscountsRepository
     {
-        Task<Discount[]> ReadAllAsync();
         Task<Discount> ReadAsync(string name);
         Task SetUsedAsync(string name);
-        Task<bool> HasBeenUsedAsync(string name);
-        Task<bool> HasAnyBeenUsedAsync();
     }
 }

@@ -51,6 +51,7 @@ namespace Zupa.Test.Booking.Data
         public Task<Basket> SetDiscount(double discountRate)
         {
             _basket.Discount = discountRate;
+            _basket.DiscountApplied = true;
             return Task.FromResult(_basket);
         }
     }
