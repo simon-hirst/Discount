@@ -22,25 +22,34 @@ namespace Zupa.Test.Booking.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Discount>> ApplyDiscount([FromBody] Discount discount)
-        {
-            var discountModel = discount.ToDiscountOrderModel();
-            await _discountsRepository.SetUsedAsync(discount.Name); // todo: change to take Discount as parameter
-            await _basketsRepository.SetDiscount(discountModel.DiscountRate);
-            return discount;
-        }
-
-        [HttpGet]
-        public async Task<bool> DiscountApplied()
-        {
-            return await _discountsRepository.HasAnyBeenUsedAsync();
-        }
-
-        [HttpGet("{discountText}")]
-        public async Task<ActionResult<Discount>> GetDiscount(string discountText)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Discount>> ApplyDiscount([FromBody] string discountText)
         {
             var discountResult = await _discountsRepository.ReadAsync(discountText);
-            return discountResult == null ? null : discountResult.ToDiscountViewModel();
+            var basket = await _basketsRepository.ReadAsync();
+
+            if (discountResult == null)
+            {
+                return NotFound(new JsonResult("This discount doesn't exist."));
+            }
+
+            if (discountResult.Used)
+            {
+                return BadRequest(new JsonResult("This discount has been used already."));
+            }
+
+            if (basket.Discount != 1)
+            {
+                return NotFound(new JsonResult("A discount has already been applied."));
+            }
+
+            await _discountsRepository.SetUsedAsync(discountResult.Name); // todo: change to take Discount as parameter
+            await _basketsRepository.SetDiscount(discountResult.DiscountRate);
+            discountResult = await _discountsRepository.ReadAsync(discountResult.Name);
+
+            return discountResult.ToDiscountViewModel();
         }
     }
 }

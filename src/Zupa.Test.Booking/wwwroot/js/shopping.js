@@ -41,10 +41,25 @@
             updateBasketView(basket);
             resetBasketCount(basket.items.length);
         });
+});
 
-    // stop discount button from refreshing page
-    document.getElementById("discountBtn").addEventListener("click", function (event) {
-        event.preventDefault()
+document.forms['discountForm'].addEventListener('submit', (event) => {
+    // stop the discount form from refreshing on submit so we can execute some JS
+    event.preventDefault();
+
+    fetch('/api/discounts', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(document.getElementById('discountText').value)
+    }).then((resp) => {
+        console.log(resp);
+        return resp.json();
+    }).then((body) => {
+        console.log(body);
+        alert(body.value);
     });
 });
 
@@ -134,59 +149,4 @@ function placeOrder() {
                 emptyBasketView();
             });
         });
-}
-
-function verifyDiscount() {
-    let discountText = document.getElementById('discountText').value;
-
-    fetch('/api/discounts/' + discountText)
-        .then(function (response) {
-            if (response.status == 200) {
-                return response.json();
-            }
-            else {
-                alert('This discount code does not exist.'); // todo: fix empty values
-                return null;
-            }
-        }).then(function (discount) {
-            fetch('api/baskets')
-                .then(function (response) {
-                    return response.json();
-                }).then(function (basket) {
-                    if (discount) {
-                        if (discount.used == false & basket.discount == 1) {
-                            console.log("asdas");
-                            applyDiscount(discount);
-                        }
-                        else {
-                            alert('Discount already applied');
-                        }
-                    }
-                })
-        });
-}
-
-function applyDiscount(discount) {
-    if (discount) {
-        fetch('api/discounts', {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(discount)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (discount) {
-            alert("Discount " + discount.name + " with a discount rate of " + discount.discountRate + " applied.");
-        }).then(function () {
-            fetch('/api/baskets')
-                .then(function (response) {
-                    return response.json();
-                }).then(function (basket) {
-                    emptyBasketView();
-                    updateBasketView(basket);
-                });
-        });
-    }
 }

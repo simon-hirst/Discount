@@ -12,7 +12,7 @@
             };
         }
 
-        public static Models.Discount ToDiscountOrderModel(this Discount discount)
+        public static Models.Discount ToDiscountModel(this Discount discount)
         {
             return new Models.Discount
             {
